@@ -70,6 +70,16 @@ uint8_t *srcHit2 = &charset[0x1B];
 uint8_t *srcHitLegend = &charset[0x1C << 3];
 
 /**
+ * @brief legend ship offsets
+ */
+uint16_t legendShipOffset[] = {2, 1, 0, 256U * 5, 256U * 6 + 1};
+
+/**
+ * @brief background color (hopefully we can factor this out)
+ */
+uint8_t background=0;
+
+/**
  * @brief Plot a single 8x8 tile at requested coordinates
  * @param tile Pointer to tile data, expected to be 16 bytes in length
  * @param x horizontal position (0-39)
@@ -118,6 +128,52 @@ void plot_tile(const unsigned char *tile, unsigned char x, unsigned char y, unsi
         video[ro+1] = tile[i*2+1];
         video[ro] &= m;
         video[ro+1] &= m;
+    }
+}
+
+/**
+ * @brief draw text s at x,y
+ * @param x X coordinate (0-39)
+ * @param y Y coordinate (0-24)
+ * @param s Pointer to string
+ */
+void drawTextAt(uint8_t x, uint8_t y, const char *s)
+{
+    char c;
+
+    while ((c = *s++))
+    {
+        if (c >= 97 && c <= 122)
+            c -= 32;
+        plot_tile(&charset[c], x++, y, 0x03);
+    }
+}
+
+/**
+ * @brief draw alt text s at x,y
+ * @param x X coordinate (0-39)
+ * @param y Y coordinate (0-24)
+ * @param s Pointer to string
+ */
+void drawTextAltAt(uint8_t x, uint8_t y, const char *s)
+{
+    char c;
+    uint8_t rop;
+
+    while ((c = *s++))
+    {
+        if (c < 65 || c > 90)
+        {
+            rop = 0x01;
+        }
+        else
+        {
+            rop = 0x03;
+        }
+
+        if (c >= 97 && c <= 122)
+            c -= 32;
+        plot_tile(&charset[c],x++,y,rop);
     }
 }
 
@@ -326,6 +382,44 @@ void waitvsync()
 {
     while (! (inp(0x3DA) & 0x08));
     while (inp(0x3DA) & 0x08);
+}
+
+/**
+ * @brief draw ship internally
+ * @param dest pointer to destination buffer
+ * @param size ship size (2-5?)
+ * @param delta ???
+ */
+void drawShipInternal(uint8_t *dest, uint8_t size, uint8_t delta)
+{
+    uint8_t i, j, c = 0x12;
+    uint8_t *src;
+    if (delta)
+        c = 0x17;
+    for (i = 0; i < size; i++)
+    {
+        // hires_putc(x, y, ROP_CPY, c);
+        // Faster version of above, but uses ~100 bytes
+        src = &charset[(uint16_t)c];
+        for (j = 0; j < 8; ++j)
+        {
+            *dest = *src++;
+            dest += 32;
+        }
+        if (delta)
+        {
+            c = 0x16;
+            if (i == size - 2)
+                c = 0x15;
+        }
+        else
+        {
+            dest -= 255;
+            c = 0x13;
+            if (i == size - 2)
+                c = 0x14;
+        }
+    }
 }
 
 /**
@@ -582,4 +676,182 @@ void drawGamefieldUpdate(uint8_t quadrant, uint8_t *gamefield, uint8_t attackPos
         *dest = *src++;
         dest += 32;
     }
+}
+
+
+
+/**
+ * @brief draw legend ship
+ * @param player Player # (0-3)
+ * @param index ship index (?)
+ * @param size ship size (2-5?)
+ * @param status (active-inactive?)
+ */
+void drawLegendShip(uint8_t player, uint8_t index, uint8_t size, uint8_t status)
+{
+    uint16_t dest = fieldX + quadrant_offset[player] + legendShipOffset[index];
+
+    if (player > 1 || (player > 0 && fieldX > 0))
+    {
+        dest += 256 + 11;
+    }
+    else
+    {
+        dest += 256 - 4;
+    }
+
+    if (status)
+    {
+        drawShipInternal((uint8_t *)video + dest, size, 1);
+    }
+    else
+    {
+        plot_tile(&charset[0x1c], (uint8_t)(dest % 32), (uint8_t)(dest / 32), 3);
+    }
+}
+
+/**
+ * @brief Draw player name
+ * @param player Player # (0-3)
+ * @param name pointer to player name
+ * @param active is player active?
+ */
+void drawPlayerName(uint8_t player, const char *name, bool active)
+{
+    uint8_t x, y;
+    uint16_t pos = fieldX + quadrant_offset[player];
+
+    x = (uint8_t)(pos % 32 + 1);
+    y = (uint8_t)(pos / 32 - 9);
+
+    if (player == 0 || player == 3)
+    {
+        y += 89;
+    }
+
+    background = 0x03;
+
+    if (active)
+    {
+        plot_tile(&charset[0x05], x-1, y, 0x03);
+        drawTextAt(x, y, name);
+    }
+    else
+    {
+        plot_tile(&charset[0x62], x-1, y, 0x03);
+        drawTextAltAt(x, y, name);
+    }
+
+    background = 0x00;
+}
+
+/**
+ * @brief draw gamefield cursor
+ * @param quadrant (0-3)
+ * @param x (0-39)
+ * @param y (0-24)
+ * @param gamefield pointer to gamefield
+ * @param blink is cursor blinking? (bool)
+ */
+void drawGamefieldCursor(uint8_t quadrant, uint8_t x, uint8_t y, uint8_t *gamefield, uint8_t blink)
+{
+    uint8_t *src, *dest = (uint8_t *)video + quadrant_offset[quadrant] + fieldX + (uint16_t)y * 256 + x;
+    uint8_t j, c = gamefield[y * 10 + x];
+
+    if (blink)
+    {
+        c = c * 2 + 5 + blink;
+    }
+    else
+    {
+        c += 0x18;
+    }
+    src = &charset[(uint16_t)c];
+
+    for (j = 0; j < 8; ++j)
+    {
+        *dest = *src++;
+        dest += 32;
+    }
+}
+
+/**
+ * @brief draw clock icon
+ */
+void drawClock()
+{
+    plot_tile(&charset[0x1D], WIDTH - 1, HEIGHT * 8 - 8, 3);
+}
+
+/**
+ * @brief Draw a blank tile
+ */
+void drawBlank(uint8_t x, uint8_t y)
+{
+    plot_tile(&charset[0x20], x, y*8+OFFSET_Y, 3);
+}
+
+/**
+ * @brief Draw connection icon
+ */
+void drawConnectionIcon(bool show)
+{
+    plot_tile(show ? &charset[0x1e] : &charset[0x20], 0, HEIGHT*8-8, 3);
+    plot_tile(show ? &charset[0x1f] : &charset[0x20], 1, HEIGHT*8-8, 3);
+}
+
+/**
+ * @brief copy screen buffer to off-screen
+ * @return true if implemented, otherwise false
+ */
+bool saveScreenBuffer()
+{
+    return false; /* @TODO: Come back and do this. */
+}
+
+/**
+ * @brief Restore screen buffer from offscreen.
+ */
+void restoreScreenBuffer()
+{
+    /* @TODO: come back and do this. */
+}
+
+/**
+ * @brief x Horizontal position (0-39)
+ * @brief y Vertical position (0-24)
+ * @brief w Width (0-39)
+ * @brief h Height (0-24)
+ */
+void drawBox(uint8_t x, uint8_t y, uint8_t w, uint8_t h)
+{
+    y = y * 8 + 1 + OFFSET_Y;
+
+    // Top Corners
+    plot_tile(&charset[0x3b],x,y,3);
+    plot_tile(&charset[0x3c],x+w+1,y,3);
+
+    // Top/bottom lines
+    // hires_Mask(x+1,y+3,w,2, box_color);
+    // hires_Mask(x+1,y+(h+1)*8+2,w,2, box_color);
+
+    // Sides
+    //   for(i=0;i<h;++i) {
+    //     y+=8;
+    //     hires_putc(x,y,box_color, 0x3f);
+    //     hires_putc(x+w+1,y,box_color,0x40);
+    //   }
+
+    y += 8 * (h - 1);
+    // Bottom Corners
+    plot_tile(&charset[0x3D], x, y+2, 3);
+    plot_tile(&charset[0x3E], x+w+1, y+2, 3);
+}
+
+/**
+ * @brief cycle to next color choice
+ */
+uint8_t cycleNextColor()
+{
+    return 0;
 }

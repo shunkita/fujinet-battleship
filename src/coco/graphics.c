@@ -165,7 +165,6 @@ void drawTextAt(uint8_t x, uint8_t y, const char *s)
         hires_putc(x++, y, ROP_CPY, c);
     }
 }
-
 void drawTextAlt(uint8_t x, uint8_t y, const char *s)
 {
     y = y * 8 + OFFSET_Y;

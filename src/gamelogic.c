@@ -130,6 +130,7 @@ void handleShipPlacement()
     uint8_t i, x, y, dir, pos, size, change, blink, maxW, maxH, canPlace;
 
     memset(tempBuffer, 0, sizeof(tempBuffer));
+
     for (i = 0; i < shipPlaceIndex; i++)
     {
         pos = shipPlacements[i];
@@ -157,17 +158,6 @@ void handleShipPlacement()
 
         while (true)
         {
-
-            // Test speed of drawing for vsync
-            // while (1)
-            // {
-            //
-            //     pos = 0;
-            //     waitvsync();
-            //     drawShip(5, pos, 1);
-            //     drawShip(5, pos, 0);
-            // }
-
             // Draw ship at current position
 
             maxW = (11 - (dir == 0 ? size : 1));
@@ -291,6 +281,7 @@ void renderGameboard()
         skipAnim = true;
         resetScreen();
         drawBoard(clientState.game.status == STATUS_PLACE_SHIPS ? 1 : clientState.game.playerCount);
+
         if (clientState.game.status == STATUS_PLACE_SHIPS)
         {
             centerText(5, "place your five ships");
@@ -484,9 +475,9 @@ void processInput()
             renderLobby();
 
             if (clientState.lobby.playerStatus)
-                soundHit();
+                soundSelect();
             else
-                soundTick();
+                soundInvalid();
 
             apiCall("ready");
             clearCommonInput();
@@ -512,7 +503,7 @@ void processInput()
 void waitOnPlayerMove()
 {
     bool foundValidLocation;
-    uint8_t waitCount, frames, i, moved;
+    uint8_t waitCount, frames, lastFrame, i, moved;
     uint16_t jifsPerSecond, maxJifs;
 
     resetTimer();
@@ -527,13 +518,17 @@ void waitOnPlayerMove()
     while (clientState.game.moveTime > 0)
     {
         frames = (frames + 1) % 30;
+        i = frames / 10;
         waitvsync();
-
-        // Draw cursor
-        for (i = 1; i < clientState.game.playerCount; i++)
+        if (moved || i != lastFrame)
         {
-            if (clientState.game.players[i].playerStatus == PLAYER_STATUS_DEFAULT)
-                drawGamefieldCursor(i, posX, posY, clientState.game.players[i].gamefield, frames / 10);
+            lastFrame = i;
+            // Draw cursor
+            for (i = 1; i < clientState.game.playerCount; i++)
+            {
+                if (clientState.game.players[i].playerStatus == PLAYER_STATUS_DEFAULT)
+                    drawGamefieldCursor(i, posX, posY, clientState.game.players[i].gamefield, lastFrame);
+            }
         }
 
         if (moved)
@@ -556,6 +551,9 @@ void waitOnPlayerMove()
             strcpy(moveBuffer, "attack/");
             itoa(posY * 10 + posX, moveBuffer + strlen(moveBuffer), 10);
             sendMove(moveBuffer);
+
+            // Clear timer
+            drawSpace(WIDTH - TIMER_WIDTH - 2, HEIGHT - 1, 2 + TIMER_WIDTH);
             return;
         }
 
@@ -595,6 +593,11 @@ void waitOnPlayerMove()
         {
         case KEY_ESCAPE:
         case KEY_ESCAPE_ALT:
+            for (i = 1; i < clientState.game.playerCount; i++)
+            {
+                if (clientState.game.players[i].playerStatus == PLAYER_STATUS_DEFAULT)
+                    drawGamefieldCursor(i, posX, posY, clientState.game.players[i].gamefield, 0);
+            }
             showInGameMenuScreen();
             return;
         }

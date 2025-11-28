@@ -14,7 +14,7 @@ APP_TARGETS := $(foreach p, $(PLATFORMS), $(R2R_DIR)/$(p)/$(PRODUCT))
 all:: $(APP_TARGETS)
 
 clean::
-	rm -rf $(R2R_DIR) $(BUILD_DIR) $(CACHE_DIR)
+	rm -rf $(R2R_DIR) $(BUILD_DIR)
 
 # Use % wildcard match to platform specific app so we don't have to
 # spell out every single platform variation

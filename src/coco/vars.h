@@ -1,4 +1,3 @@
-#ifdef _CMOC_VERSION_
 #ifndef KEYMAP_H
 #define KEYMAP_H
 
@@ -54,4 +53,3 @@
 #define CHAR_CURSOR 0x9F
 
 #endif /* KEYMAP_H */
-#endif /* _CMOC_VERSION_ */

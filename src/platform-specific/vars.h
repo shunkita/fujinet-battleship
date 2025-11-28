@@ -8,11 +8,7 @@
 #define ESCAPE "ESCAPE"
 #define ESC "ESC"
 
-// Platform specific vars
-#include "../atari/vars.h"
-// #include "../apple2/vars.h"
-#include "../coco/vars.h"
-// #include "../c64/vars.h"
-// #include "../adam/vars.h"
+// Include platform specific vars - this is defined in the Makefile as "../$(PLATFORM)/vars.h"
+#include PLATFORM_VARS
 
 #endif /* VARS_H */

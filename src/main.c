@@ -26,7 +26,7 @@
 char serverEndpoint[50] = "https://battleship.carr-designs.com/";
 
 // For local dev testing, instead of changing the endpoint above,
-// set 3rd byte in the e41c0500 appkey to 0xff, which will cause the below endpoing to be used
+// set 1st byte in the e41c0500 appkey to 0xff, which will cause the below endpoing to be used
 char localServer[] = "http://127.0.0.1:8080/";
 
 char query[50] = ""; //"?table=dev7";//&player=ERICAPL2";

@@ -132,7 +132,7 @@ typedef struct
 
 typedef struct
 {
-    uint8_t key;
+    uint16_t key;
     bool trigger;
     int8_t dirX;
     int8_t dirY;

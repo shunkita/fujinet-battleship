@@ -30,21 +30,21 @@
  * Platform specific key map for common input
  */
 
-#define KEY_LEFT_ARROW 0x08
-#define KEY_LEFT_ARROW_2 0xF1
-#define KEY_LEFT_ARROW_3 0xF2 // ,
+#define KEY_LEFT_ARROW      0x4B00
+#define KEY_LEFT_ARROW_2    0x4B01
+#define KEY_LEFT_ARROW_3    0x4B02
 
-#define KEY_RIGHT_ARROW 0x09
-#define KEY_RIGHT_ARROW_2 0xF3
-#define KEY_RIGHT_ARROW_3 0xF4 // .
+#define KEY_RIGHT_ARROW     0x4D00
+#define KEY_RIGHT_ARROW_2   0x4D01
+#define KEY_RIGHT_ARROW_3   0x4D02
 
-#define KEY_UP_ARROW 0x5E
-#define KEY_UP_ARROW_2 0xF5
-#define KEY_UP_ARROW_3 0xF6 // -
+#define KEY_UP_ARROW        0x4800
+#define KEY_UP_ARROW_2      0x4801
+#define KEY_UP_ARROW_3      0x4802
 
-#define KEY_DOWN_ARROW 0x0A
-#define KEY_DOWN_ARROW_2 0xF7
-#define KEY_DOWN_ARROW_3 0xF9 // =
+#define KEY_DOWN_ARROW      0x5000
+#define KEY_DOWN_ARROW_2    0x5001
+#define KEY_DOWN_ARROW_3    0x5002
 
 #define KEY_RETURN 0x0D
 

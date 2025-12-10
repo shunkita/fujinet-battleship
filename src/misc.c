@@ -9,10 +9,6 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#ifdef __WATCOMC__
-#define cgetc getch
-#endif
-
 InputStruct input;
 uint8_t _lastJoy, _joy, _joySameCount = 10;
 bool _buttonReleased = true;

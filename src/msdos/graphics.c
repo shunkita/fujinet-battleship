@@ -190,8 +190,8 @@ void plotName(unsigned char x, unsigned char y, unsigned char color, const char 
 void resetScreen(void)
 {
     waitvsync();
-    _fmemset(&video[0x0000], 0, 8000-640);
-    _fmemset(&video[0x2000], 0, 8000-640);
+    _fmemset(&video[0x0000], 0, 8000);
+    _fmemset(&video[0x2000], 0, 8000);
     waitvsync();
 }
 

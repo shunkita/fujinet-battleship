@@ -36,22 +36,26 @@ void readCommonInput()
 
     _joy = readJoystick();
 
+    // Simulate the keyboard delay for joystick input, by checking previous joystick value
+    // There is special logic so that "shifting into a diagnal" still results in a single X and Y move
+    // e.g. RIGHT, RIGHT+UP, UP moves the cursor the same as a single RIGHT+UP, rathar than TWO to the right and ONE up
     if (_joy != _lastJoy)
     {
-        if (_lastJoy != 99)
+        if (JOY_LEFT(_joy) && (_lastJoy == 99 || !JOY_LEFT(_lastJoy)))
+            input.dirX = -1;
+        else if (JOY_RIGHT(_joy) && (_lastJoy == 99 || !JOY_RIGHT(_lastJoy)))
+            input.dirX = 1;
+
+        if (JOY_UP(_joy) && (_lastJoy == 99 || !JOY_UP(_lastJoy)))
+            input.dirY = -1;
+        else if (JOY_DOWN(_joy) && (_lastJoy == 99 || !JOY_DOWN(_lastJoy)))
+            input.dirY = 1;
+
+        // Reset the delay if no movement is detected
+        if (_joy == 0)
             _joySameCount = 12;
 
         _lastJoy = _joy;
-
-        if (JOY_LEFT(_joy))
-            input.dirX = -1;
-        else if (JOY_RIGHT(_joy))
-            input.dirX = 1;
-
-        if (JOY_UP(_joy))
-            input.dirY = -1;
-        else if (JOY_DOWN(_joy))
-            input.dirY = 1;
 
         // Trigger button press only if it was previously unpressed
         if (JOY_BTN_1(_joy) || JOY_BTN_2(_joy))
@@ -71,9 +75,12 @@ void readCommonInput()
     }
     else if (_joy != 0)
     {
+        // Pressing in same direction, decrement wait counter
         if (!_joySameCount--)
         {
             _joySameCount = 0;
+
+            // Set lastJoy to 99 to trigger immediate direction change on next read
             _lastJoy = 99;
         }
     }

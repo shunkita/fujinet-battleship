@@ -129,6 +129,7 @@ void handleShipPlacement()
 {
     uint8_t i, x, y, dir, pos, size, change, blink, maxW, maxH, canPlace;
 
+    // Use tempBuffer to track occupied cells while placing ships
     memset(tempBuffer, 0, sizeof(tempBuffer));
 
     for (i = 0; i < shipPlaceIndex; i++)

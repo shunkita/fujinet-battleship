@@ -79,12 +79,13 @@ extern void irqVsyncWait(void);
 
 // Color definitions (0-15 for C64)
 #define COLOR_BORDER 0
-#define COLOR_BG 6         // Blue
+#define COLOR_BG 0
 #define COLOR_CURSOR 1     // White
 #define COLOR_SHIP 5       // Green
 #define COLOR_HIT 2        // Red
 #define COLOR_MISS 4       // Purple
-#define COLOR_TEXT 1       // White
+#define COLOR_TEXT 2       // Red
+#define COLOR_TEXT_ALT 5   // Green
 
 #define VIC_MEMORY_SETUP_REGISTER 0xD018
 #define CIA2_VIDEO_BANK_REGISTER 0xDD00
@@ -149,6 +150,8 @@ void initGraphics()
     // Set border and background colors
     POKE(0xD020, COLOR_BORDER); // Border color
     POKE(0xD021, COLOR_BG);     // Background color
+    POKE(0xD022, 1); // white
+    POKE(0xD023, 6); // blue
     // Enable multicolor character mode (set bit 4 in VIC register $D016)
     _saved_d016 = PEEK(0xD016);
     POKE(0xD016, PEEK(0xD016) | 0x10);    
@@ -207,7 +210,7 @@ void drawTextAlt(unsigned char x, unsigned char y, const char *s)
     {
         if (c >= 65 && c <= 90)
         {
-            color = COLOR_HIT;  // Alternate color
+            color = COLOR_TEXT_ALT;  // Alternate color
         }
         else
         {

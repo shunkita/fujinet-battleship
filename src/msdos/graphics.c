@@ -61,7 +61,15 @@ static unsigned char quadrant_offset[4][2] =
 /**
  * @brief offset of legends for each player
  */
-uint8_t legendShipOffset[] = {2, 1, 0, 40 * 5, 40 * 6 + 1};
+signed char legendShipOffset[5][2] =
+    {
+        {2,0},
+        {1,0},
+        {0,0},
+        {0,5},
+        {1,6},
+    };
+    // {2, 1, 0, 40 * 5, 40 * 6 + 1};
 
 /**
  * @brief Horizontal Field offset (0-39)
@@ -730,8 +738,8 @@ void drawShip(unsigned char size, unsigned char pos, bool hide)
 void drawLegendShip(uint8_t player, uint8_t index, uint8_t size, uint8_t status)
 {
     uint8_t i=0;
-    uint8_t x=quadrant_offset[player][0];
-    uint8_t y=quadrant_offset[player][1];
+    uint8_t x=quadrant_offset[player][0]+fieldX+legendShipOffset[index][0];
+    uint8_t y=quadrant_offset[player][1]+legendShipOffset[index][1];
 
     if (player > 1 || (player > 0 && fieldX > 0))
     {
@@ -740,6 +748,7 @@ void drawLegendShip(uint8_t player, uint8_t index, uint8_t size, uint8_t status)
     }
     else
     {
+        y++;
         x += WIDTH-4;
     }
 

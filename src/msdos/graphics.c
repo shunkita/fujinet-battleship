@@ -260,21 +260,21 @@ void initGraphics()
     r.h.ah = 0x10;
     r.h.al = 0x00;
     r.h.bl = 1;
-    r.h.bh = 0x0a;
+    r.h.bh = 0x0b; // CYAN
     int86(0x10,&r,&r);
 
     // remap palette
     r.h.ah = 0x10;
     r.h.al = 0x00;
     r.h.bl = 2;
-    r.h.bh = 0x0C;
+    r.h.bh = 0x0C; // RED
     int86(0x10,&r,&r);
 
     // remap palette
     r.h.ah = 0x10;
     r.h.al = 0x00;
     r.h.bl = 3;
-    r.h.bh = 0x0f;
+    r.h.bh = 0x0f; // WHITE
     int86(0x10,&r,&r);
 }
 

@@ -829,10 +829,11 @@ void resetGraphics()
 
 #ifdef COCO3
     memcpy((void *)0xFFB0, paletteBackup, 16); // assumes RGB monitor
-#endif
     width(32);
-    // screen(0, 0);
-    //  cls(255);
+#else
+    screen(0, 0);
+    cls(255);
+#endif
 }
 
 void waitvsync()

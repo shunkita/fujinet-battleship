@@ -16,3 +16,11 @@ r2r/
 *~
 *.orig
 *.rej
+#my resource
+*.o
+docs/
+*.po
+*.map
+lib/
+mymake
+png/

@@ -614,7 +614,7 @@ void drawLegendShip(uint8_t player, uint8_t index, uint8_t size, uint8_t status)
 
     if (status)
     {
-        drawShipInternal(x, y, size, 1);
+        drawShipInternal(x, y + 1, size, 1);
     }
     else
     {
@@ -720,7 +720,7 @@ void drawShipInternal(uint8_t x, uint8_t y, uint8_t size, uint8_t delta)
     }
 }
 
-void drawShip(uint8_t size, uint8_t pos, bool hide)
+void drawShip(uint8_t quadrant, uint8_t size, uint8_t pos, bool hide)
 {
     uint8_t x, y, i, j, delta = 0;
     uint8_t *src;
@@ -731,8 +731,8 @@ void drawShip(uint8_t size, uint8_t pos, bool hide)
         pos -= 100;
     }
 
-    x = (pos % 10) + fieldX + quadrant_offset_xy[0][0];
-    y = ((pos / 10) + quadrant_offset_xy[0][1] / 8) * 8 + OFFSET_Y;
+    x = (pos % 10) + fieldX + quadrant_offset_xy[quadrant][0];
+    y = ((pos / 10) + quadrant_offset_xy[quadrant][1] / 8) * 8 + OFFSET_Y;
 
     if (hide)
     {

@@ -25,8 +25,11 @@ void drawTextAlt(uint8_t x, uint8_t y, const char *s);
 void drawIcon(uint8_t x, uint8_t y, uint8_t icon);
 
 /// @brief Draw (or erase) a ship at given size and position.
-/// Used for placing ships at start of game and showing intact ships in the legend during gameplay
-void drawShip(uint8_t size, uint8_t pos, bool hide);
+/// @param quadrant player index (0-3) for positioning purpose
+/// @param size ship size (2-5)
+/// @param pos ship position 0-99, add 100 for vertical
+/// @param hide 0=show, 1=hide
+void drawShip(uint8_t quadrant, uint8_t size, uint8_t pos, bool hide);
 
 /// @brief Draw a ship either in whole or destroyed, in the legend (side trays)
 /// @param player player index (0-3) for positioning purpose
@@ -102,4 +105,3 @@ void resetGraphics();
 /// @brief Wait for vertical sync
 void waitvsync();
 #endif /* GRAPHICS_H */
-

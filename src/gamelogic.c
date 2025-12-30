@@ -176,17 +176,17 @@ void handleShipPlacement()
                 if (!blink)
                 {
                     // Clear existing ship
-                    drawShip(size, pos, 1);
+                    drawShip(0, size, pos, DRAWSHIP_HIDE);
                 }
 
                 // New ship position
                 pos = y * 10 + x + dir * 100;
-                drawShip(size, pos, blink);
+                drawShip(0, size, pos, blink);
 
                 // Redraw other ships in case they were overwritten
                 for (i = 0; i < shipPlaceIndex; i++)
                 {
-                    drawShip(shipSize[i], shipPlacements[i], 0);
+                    drawShip(0, shipSize[i], shipPlacements[i], DRAWSHIP_SHOW);
                 }
                 if (change)
                 {
@@ -299,7 +299,7 @@ void renderGameboard()
             {
                 for (i = 0; i < 5; i++)
                 {
-                    drawShip(shipSize[i], clientState.game.myShips[i], 0);
+                    drawShip(0, shipSize[i], clientState.game.myShips[i], DRAWSHIP_SHOW);
                 }
             }
 
@@ -399,22 +399,26 @@ void renderGameboard()
                     drawPlayerName(i, i == 0 && clientState.game.playerStatus != PLAYER_STATUS_VIEWING ? "you" : (const char *)clientState.game.players[i].name, false);
             }
 
-            // Show active player
-            if (clientState.game.activePlayer >= 0)
+            // Indicate active player if not game over
+            if (clientState.game.status != STATUS_GAMEOVER)
             {
-                drawPlayerName(clientState.game.activePlayer, clientState.game.activePlayer == 0 && clientState.game.playerStatus != PLAYER_STATUS_VIEWING ? "you" : (const char *)clientState.game.players[clientState.game.activePlayer].name, true);
-            }
+                // Show active player
+                if (clientState.game.activePlayer >= 0)
+                {
+                    drawPlayerName(clientState.game.activePlayer, clientState.game.activePlayer == 0 && clientState.game.playerStatus != PLAYER_STATUS_VIEWING ? "you" : (const char *)clientState.game.players[clientState.game.activePlayer].name, true);
+                }
 
-            // Blink active player
-            if (clientState.game.activePlayer > 0)
-            {
+                // Blink active player
+                if (clientState.game.activePlayer > 0)
+                {
 
-                pause(15);
-                drawPlayerName(clientState.game.activePlayer, clientState.game.players[clientState.game.activePlayer].name, false);
+                    pause(15);
+                    drawPlayerName(clientState.game.activePlayer, clientState.game.players[clientState.game.activePlayer].name, false);
 
-                pause(15);
-                drawPlayerName(clientState.game.activePlayer, clientState.game.players[clientState.game.activePlayer].name, true);
-                pause(15);
+                    pause(15);
+                    drawPlayerName(clientState.game.activePlayer, clientState.game.players[clientState.game.activePlayer].name, true);
+                    pause(15);
+                }
             }
         }
     }
@@ -422,11 +426,31 @@ void renderGameboard()
     // Display the gameover message and play a sound if the state just changed
     if (clientState.game.status == STATUS_GAMEOVER && (redraw || clientState.game.status != state.prevStatus))
     {
+        // Reveal winning player's ships (if not this player)
+        waitvsync();
+        if (clientState.game.activePlayer > 0)
+        {
+            for (i = 0; i < 5; i++)
+            {
+                drawShip(clientState.game.activePlayer, shipSize[i], clientState.game.myShips[5 + i], DRAWSHIP_SHOW);
+            }
+
+            drawGamefield(clientState.game.activePlayer, clientState.game.players[clientState.game.activePlayer].gamefield);
+        }
+
         drawEndgameMessage(clientState.game.prompt);
 
         if (clientState.game.status != state.prevStatus)
         {
             soundGameDone();
+
+            // Wait for user to press button to close game result
+            clearCommonInput();
+            while (!input.trigger)
+            {
+                waitvsync();
+                readCommonInput();
+            }
         }
     }
 
@@ -444,7 +468,7 @@ void renderGameboard()
                 // Draw already placed ships from game state
                 for (i = 0; i < 5; i++)
                 {
-                    drawShip(shipSize[i], clientState.game.myShips[i], 0);
+                    drawShip(0, shipSize[i], clientState.game.myShips[i], DRAWSHIP_SHOW);
                 }
             }
         }
@@ -462,7 +486,7 @@ void renderGameboard()
 void placeShip(uint8_t shipSize, uint8_t pos)
 {
     uint8_t i;
-    drawShip(shipSize, pos, false);
+    drawShip(0, shipSize, pos, DRAWSHIP_SHOW);
     for (i = 0; i < shipSize; i++)
     {
         tempBuffer[pos % 100] = 1;

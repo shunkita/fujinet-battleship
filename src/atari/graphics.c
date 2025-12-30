@@ -442,7 +442,7 @@ void drawShipInternal(uint8_t *dest, uint8_t size, uint8_t delta)
     }
 }
 
-void drawShip(uint8_t size, uint8_t pos, bool hide)
+void drawShip(uint8_t quadrant, uint8_t size, uint8_t pos, bool hide)
 {
     uint8_t i, delta = 0;
     uint8_t *dest;
@@ -453,7 +453,7 @@ void drawShip(uint8_t size, uint8_t pos, bool hide)
         pos -= 100;
     }
 
-    dest = xypos((pos % 10), (pos / 10)) + fieldX + quadrant_offset[0];
+    dest = xypos((pos % 10), (pos / 10)) + fieldX + quadrant_offset[quadrant];
 
     if (hide)
     {

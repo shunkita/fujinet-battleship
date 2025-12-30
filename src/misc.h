@@ -8,6 +8,9 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+// Client version string to send to server
+#define API_CLIENT_VERSION "2"
+
 // FujiNet AppKey settings. These should not be changed
 #define AK_LOBBY_CREATOR_ID 1   // FUJINET Lobby
 #define AK_LOBBY_APP_ID 1       // Lobby Enabled Game
@@ -47,6 +50,9 @@
 #define LEGEND_SHIP_DESTROYED 0
 #define LEGEND_SHIP_INTACT 1
 
+#define DRAWSHIP_SHOW 0
+#define DRAWSHIP_HIDE 1
+
 typedef struct
 {
     char table[9];
@@ -83,7 +89,8 @@ typedef struct
     int8_t activePlayer;
     uint8_t moveTime;
     uint8_t lastAttackPos;
-    uint8_t myShips[5];
+    // First 5 are my ships, last 5 are winner, sent at game over
+    uint8_t myShips[10];
     Player players[PLAYER_MAX];
 } Game;
 

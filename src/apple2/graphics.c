@@ -249,7 +249,7 @@ void drawIcon(uint8_t x, uint8_t y, uint8_t icon)
   }
 }
 
-void drawShip(uint8_t size, uint8_t pos, bool hide)
+void drawShip(uint8_t quadrant, uint8_t size, uint8_t pos, bool hide)
 {
     uint8_t x, y, delta = 0;
     uint8_t gx;
@@ -260,8 +260,8 @@ void drawShip(uint8_t size, uint8_t pos, bool hide)
         pos -= 100;
     }
 
-    x = (pos % 10) + fieldX + 5;
-    y = ((pos / 10) + 12) * 8 + OFFSET_Y;
+    x = (pos % 10) + fieldX + quadrant_offset[quadrant] % WIDTH;
+    y = (pos / 10) * 8 + quadrant_offset[quadrant] / WIDTH + 1;
 
     if (hide)
     {

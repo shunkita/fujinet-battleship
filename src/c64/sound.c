@@ -222,6 +222,12 @@ void soundHit()
     playToneVoice(0, 30, 400, WAVEFORM_NOISE, 0x000, 0x07, 0x0F, 0x00);
 }
 
+void soundSink()
+{
+    // TODO: A bigger sound for a sunken shup
+    soundHit();
+}
+
 void soundMiss()
 {
     if (prefs.disableSound)

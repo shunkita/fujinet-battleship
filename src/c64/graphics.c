@@ -511,7 +511,7 @@ void drawShipInternal(uint8_t *dest, uint8_t size, uint8_t delta)
     }
 }
 
-void drawShip(uint8_t size, uint8_t pos, bool hide)
+void drawShip(uint8_t quadrant, uint8_t size, uint8_t pos, bool hide)
 {
     uint8_t i, delta = 0;
     uint8_t *dest;
@@ -522,7 +522,7 @@ void drawShip(uint8_t size, uint8_t pos, bool hide)
         pos -= 100;
     }
 
-    dest = xypos((pos % 10), (pos / 10)) + fieldX + quadrant_offset[0];
+    dest = xypos((pos % 10), (pos / 10)) + fieldX + quadrant_offset[quadrant];
 
     if (hide)
     {
@@ -583,7 +583,7 @@ void drawGamefield(uint8_t quadrant, uint8_t *field)
     }
 }
 
-void drawGamefieldUpdate(uint8_t quadrant, uint8_t *gamefield, uint8_t attackPos, uint8_t blink)
+void drawGamefieldUpdate(uint8_t quadrant, uint8_t *gamefield, uint8_t attackPos, uint8_t anim)
 {
     uint8_t *dest = SCREEN_LOC + quadrant_offset[quadrant] + fieldX + (uint16_t)(attackPos / 10) * WIDTH + (attackPos % 10);
     uint8_t c = gamefield[attackPos];
@@ -595,16 +595,16 @@ void drawGamefieldUpdate(uint8_t quadrant, uint8_t *gamefield, uint8_t attackPos
         POKE(SPRITE_ENABLE_REG, PEEK(SPRITE_ENABLE_REG) & 0xFE);
     }
 
-    // Animate attack (only in empty sea cell)
-    if (blink > 9 && (*dest == TILE_SEA || *dest > 226))
+    // Animate attack
+    if (anim > 9)
     {
-        *dest = 217 + blink;
+        *dest = 217 + anim;
         return;
     }
 
     if (c == FIELD_ATTACK)
     {
-        *dest = blink ? TILE_HIT2 : TILE_HIT;
+        *dest = anim ? TILE_HIT2 : TILE_HIT;
     }
     else if (c == FIELD_MISS)
     {
@@ -668,10 +668,5 @@ void drawBox(unsigned char x, unsigned char y, unsigned char w, unsigned char h)
     col_pos[h * WIDTH + WIDTH] = 8;
     pos[w + h * WIDTH + WIDTH + 1] = TILE_BOTTOM_RIGHT_CORNET;
     col_pos[w + h * WIDTH + WIDTH + 1] = 8;
-}
-
-void waitvsync()
-{
-    //irqVsyncWait();
 }
 

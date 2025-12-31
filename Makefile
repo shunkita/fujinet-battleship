@@ -10,6 +10,10 @@
 # PLATFORMS: 		apple2 atari coco coco3 msdos
 # PLATFORMS TODO:   c64 adam msxrom
 
+# C64 SPECIFIC:
+# To test in VICE:  make c64 VICE=1
+# You must run support/c64/fuji_mock_network.py as a bridge
+
 # COCO SPECIFIC:
 # 	Coco 1/2: 		make coco
 # 	Coco 3: 		make coco3
@@ -17,12 +21,9 @@
 #   Test Dist:      make coco-dist test-coco-dist
 
 
-
 PRODUCT = fbs
 PRODUCT_UPPER = FBS
 PLATFORMS = coco msdos atari apple2 c64
-
-
 
 # SRC_DIRS may use the literal %PLATFORM% token.
 # It expands to the chosen PLATFORM plus any of its combos.
@@ -43,34 +44,49 @@ ifeq ($(PLATFORM),msdos)
   CFLAGS =
 endif
 
+## Coco specific flags (cmoc)
 CFLAGS_EXTRA_COCO = \
 	-Wno-assign-in-condition \
 	-I src/include \
 	--no-relocate \
 	--intermediate
 
-## COCO 1/2 or COCO 3 specific flags
 ifeq ($(MAKE_COCO3),COCO3)
+# 	Coco 3
 	CFLAGS_EXTRA_COCO += -DCOCO3
-	LDFLAGS_EXTRA_COCO = --limit=7800 --org=1000 # Coco3
+	LDFLAGS_EXTRA_COCO = --limit=7800 --org=1000
 else
-	LDFLAGS_EXTRA_COCO = --limit=5ff0 --org=1000 # Coco1/2
+# 	Coco 1/2	
+	LDFLAGS_EXTRA_COCO = --limit=5ff0 --org=1000
+endif
+
+ifeq ($(VICE),1)
+# VICE C64 emulator specific flags
+	CFLAGS_EXTRA_C64 += -DUSE_EMULATOR=1
+	LDFLAGS_EXTRA_C64 += -DUSE_EMULATOR=1
 endif
 
 # Variables for coco-dist
 R2R_PRODUCT = r2r/coco/$(PRODUCT)
 COCO_DISK = $(R2R_PRODUCT).dsk
 
+# Support 'make coco3'
 coco3:
 	make coco MAKE_COCO3=COCO3
+
 
 # Apple II specific flags (cc65)
 CFLAGS_EXTRA_APPLE2 += -Os -D__APPLE2__
 LDFLAGS_EXTRA_APPLE2 += --start-addr 0x4000 --ld-args -D,__HIMEM__=0xBF00
+
+
+# C64 specific flags (cc65)
+# Use custom linker configuration to move stack from $CFFF to $BFFF
+LDFLAGS_EXTRA_C64 += -C support/c64/c64-custom.cfg
+
 #################################################################
 ## PRE BUILD STEPS                                             ##
 #################################################################
-
 
 
 $(PLATFORM)/r2r::
@@ -124,7 +140,9 @@ endif
 # Start normal speed
 #	cd ~/mame_coco;mame coco -ui_active -throttle -window -nomaximize -resolution 1200x1024 -autoboot_delay 2 -nounevenstretch  -autoboot_command "runm\"fbs\n"
 
-
+c64/disk-post::
+	x64sc $(CURDIR)/$(EXECUTABLE)
+  
 atari/disk-post::
 	wine /Users/eric/Documents/Altirra/Altirra64.exe /singleinstance /run $(EXECUTABLE) >/dev/null 2>&1
 #	Copy to fujinet-pc SD drive. On first run, mount that drive for future runs

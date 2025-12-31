@@ -261,11 +261,11 @@ void handleShipPlacement()
 
             switch (input.key)
             {
-            case KEY_ESCAPE:     // Esc
-            case KEY_ESCAPE_ALT: // Esc Alt
-                showInGameMenuScreen();
-                return;
-                break;
+                case KEY_ESCAPE:     // Esc
+                case KEY_ESCAPE_ALT: // Esc Alt
+                    showInGameMenuScreen();
+                    return;
+                    break;
             }
         }
     }

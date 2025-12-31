@@ -30,6 +30,11 @@
 #define ICON_CURSOR_ALT 0x5D
 #define ICON_CURSOR_BLIP 0x3E
 
+// to enable: make c64 -DUSE_EMULATOR
+#ifdef USE_EMULATOR
+#define CUSTOM_FUJINET_CALLS
+#endif
+
 /**
  * Platform specific key map for common input
  */
@@ -51,11 +56,11 @@
 #define KEY_DOWN_ARROW_3 3  // DUMMY
 
 // #define KEY_RETURN       0x0D
-#define KEY_ESCAPE CH_ESC
-#define KEY_ESCAPE_ALT 1
+#define KEY_ESCAPE 0x5F
+#define KEY_ESCAPE_ALT 0x03
 
 #define KEY_SPACEBAR 0x20
-#define KEY_BACKSPACE CH_DEL
+#define KEY_BACKSPACE 0x14
 
 #undef KEY_RETURN
 #define KEY_RETURN CH_ENTER

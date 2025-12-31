@@ -25,6 +25,13 @@ uint8_t _lastKey = 0;  // Track last key pressed to prevent repeated input (Appl
 #define JOY_BTN_2_MASK JOY_BTN_1_MASK
 #endif
 
+
+#ifdef CUSTOM_FUJINET_CALLS
+// Optional: This would be implemented in platform-specific code for emulators, etc
+uint16_t custom_read_appkey(uint16_t creator_id, uint8_t app_id, uint8_t key_id, char *destination);
+void custom_write_appkey(uint16_t creator_id, uint8_t app_id, uint8_t key_id, uint16_t count, char *data);
+#endif
+
 void pause(uint8_t frames)
 {
     while (frames--)
@@ -170,26 +177,18 @@ void savePrefs()
     write_appkey(AK_CREATOR_ID, AK_APP_ID, AK_KEY_PREFS, sizeof(prefs), (char *)&prefs);
 }
 
-// ********************** Temp override until fujinet-lib ak_appkey_size enum fix
-extern uint16_t ak_creator_id;
-extern uint8_t ak_app_id;
-extern uint8_t ak_appkey_size;
-
-void fuji_set_appkey_details(uint16_t creator_id, uint8_t app_id, enum AppKeySize keysize)
-{
-    ak_appkey_size = (uint8_t)keysize;
-    ak_app_id = app_id;
-    ak_creator_id = creator_id;
-}
-// **********************
 
 uint16_t read_appkey(uint16_t creator_id, uint8_t app_id, uint8_t key_id, char *destination)
 {
     uint16_t read = 0;
 
-    fuji_set_appkey_details(creator_id, app_id, DEFAULT);
-    if (!fuji_read_appkey(key_id, &read, (uint8_t *)destination))
-        read = 0;
+    #ifdef CUSTOM_FUJINET_CALLS
+        read = custom_read_appkey(creator_id, app_id, key_id, destination);
+    #else
+        fuji_set_appkey_details(creator_id, app_id, DEFAULT);
+        if (!fuji_read_appkey(key_id, &read, (uint8_t *)destination))
+            read = 0;
+    #endif
 
     // Add string terminator after the data ends in case it is being interpreted as a string
     destination[read] = 0;
@@ -198,6 +197,10 @@ uint16_t read_appkey(uint16_t creator_id, uint8_t app_id, uint8_t key_id, char *
 
 void write_appkey(uint16_t creator_id, uint8_t app_id, uint8_t key_id, uint16_t count, char *data)
 {
-    fuji_set_appkey_details(creator_id, app_id, DEFAULT);
-    fuji_write_appkey(key_id, count, (uint8_t *)data);
+    #ifdef CUSTOM_FUJINET_CALLS
+        custom_write_appkey(creator_id, app_id, key_id, count, data);
+    #else
+        fuji_set_appkey_details(creator_id, app_id, DEFAULT);
+        fuji_write_appkey(key_id, count, (uint8_t *)data);
+    #endif
 }

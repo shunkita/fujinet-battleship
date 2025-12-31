@@ -35,6 +35,7 @@ void progressAnim(uint8_t y)
 
 void processStateChange()
 {
+    static uint8_t i;
 
     switch (clientState.game.status)
     {
@@ -51,6 +52,14 @@ void processStateChange()
     state.prevPlayerCount = clientState.game.playerCount;
     state.prevActivePlayer = clientState.game.activePlayer;
     state.prevAttackPos = clientState.game.lastAttackPos;
+
+    if (clientState.game.status >= STATUS_GAMESTART)
+    {
+        for(i=0;i<clientState.game.playerCount;i++)
+        {
+            memcpy(&state.gamefield[i], &clientState.game.players[i].gamefield, 100);
+        }
+    } 
 }
 
 #define READY_LEFT WIDTH / 2 - 8
@@ -63,6 +72,10 @@ void renderLobby()
     if (clientState.game.status != state.prevStatus || state.drawBoard)
     {
         state.drawBoard = false;
+        
+        // Clear gamefield
+        memset(state.gamefield, 0, sizeof(state.gamefield));
+
         resetScreen();
 
         // Round 0 - Ready Up screen
@@ -331,7 +344,7 @@ void renderGameboard()
                 {
                     for (i = 0; i < clientState.game.playerCount; i++)
                     {
-                        if (clientState.game.players[i].playerStatus == PLAYER_STATUS_DEFAULT && i != state.prevActivePlayer)
+                        if (i != state.prevActivePlayer && clientState.game.players[i].playerStatus == PLAYER_STATUS_DEFAULT && state.gamefield[i][clientState.game.lastAttackPos] == 0 )
                             drawGamefieldUpdate(i, clientState.game.players[i].gamefield, clientState.game.lastAttackPos, j);
                     }
                     pause(5);
@@ -343,7 +356,7 @@ void renderGameboard()
             {
                 for (i = 0; i < clientState.game.playerCount; i++)
                 {
-                    if (i != state.prevActivePlayer)
+                    if (i != state.prevActivePlayer && state.gamefield[i][clientState.game.lastAttackPos] == 0)
                         drawGamefieldUpdate(i, clientState.game.players[i].gamefield, clientState.game.lastAttackPos, j & 1);
                 }
                 if (!playedSound)
@@ -377,7 +390,7 @@ void renderGameboard()
                         drawLegendShip(i, j, shipSize[j], jj & 1);
                     }
 
-                    soundHit();
+                    soundSink();
                 }
                 else
                 {
@@ -602,28 +615,46 @@ void waitOnPlayerMove()
         // Handle trigger press
         if (input.trigger)
         {
-            soundAttack();
+
             attackPos = posY * 10 + posX;
 
-            // Animate attack
-            for (j = 10; j < 16; j++)
+            // Check if at least one enemy cell is valid to attack
+            for (i = 1; i < clientState.game.playerCount; i++)
             {
-                for (i = 1; i < clientState.game.playerCount; i++)
-                {
-                    if (clientState.game.players[i].playerStatus == PLAYER_STATUS_DEFAULT)
-                        drawGamefieldUpdate(i, clientState.game.players[i].gamefield, attackPos, j);
-                }
-                pause(5);
+                if (clientState.game.players[i].playerStatus == PLAYER_STATUS_DEFAULT && state.gamefield[i][attackPos] == 0 )
+                    break;
             }
 
-            // Send command to score this value
-            strcpy(moveBuffer, "attack/");
-            itoa(attackPos, moveBuffer + strlen(moveBuffer), 10);
-            sendMove(moveBuffer);
+            if (i == clientState.game.playerCount)
+            {
+                // Invalid location
+                soundInvalid();
+            }
+            else 
+            {
+                // Attack!
+                soundAttack();
+                
+                // Animate attack / clear cursor
+                for (j = 10; j < 16; j++)
+                {
+                    for (i = 1; i < clientState.game.playerCount; i++)
+                    {
+                        if (clientState.game.players[i].playerStatus == PLAYER_STATUS_DEFAULT)
+                            drawGamefieldUpdate(i, clientState.game.players[i].gamefield, attackPos, state.gamefield[i][attackPos] == 0 ?  j : 0);
+                    }
+                    pause(5);
+                }
 
-            // Clear timer
-            drawSpace(WIDTH - TIMER_WIDTH - 2, HEIGHT - 1, 2 + TIMER_WIDTH);
-            return;
+                // Send command to score this value
+                strcpy(moveBuffer, "attack/");
+                itoa(attackPos, moveBuffer + strlen(moveBuffer), 10);
+                sendMove(moveBuffer);
+
+                // Clear timer
+                drawSpace(WIDTH - TIMER_WIDTH - 2, HEIGHT - 1, 2 + TIMER_WIDTH);
+                return;
+            }
         }
 
         // Update cursor

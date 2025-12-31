@@ -61,6 +61,9 @@
 #define MISS_CURSOR_BLINK2_EVEN   0x28  // miss, cursor blink2 (even x coordinate)
 #define MISS_CURSOR_BLINK2_ODD    0x66  // miss, cursor blink2 (odd x coordinate)
 
+#define ATTACK_ANIM_START_EVEN  0x67  // attack animation start even
+#define ATTACK_ANIM_START_ODD   0x6D  // attack animation start odd
+
 /**
  * Platform specific key map for common input
  */

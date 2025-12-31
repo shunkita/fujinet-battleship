@@ -120,6 +120,11 @@ void soundHit()
     }
 }
 
+void soundSink()
+{
+    soundHit();
+}
+
 #define SPEAKER ((volatile uint8_t*)0xC030)
 void soundMiss()
 {

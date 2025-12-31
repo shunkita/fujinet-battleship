@@ -128,13 +128,16 @@ typedef struct
     int8_t prevActivePlayer;
     int8_t prevAttackPos;
 
-    uint8_t shipsLeft[4][5];
-
     bool countdownStarted;
     bool waitingOnEndGameContinue;
     bool drawBoard;
     bool inGame;
 
+    // Track gamefield state - used to know when to fire shoot animation
+    uint8_t gamefield[PLAYER_MAX][100];
+
+    // Track ships left - used to know when to fire sink animation
+    uint8_t shipsLeft[PLAYER_MAX][5];
 } GameState;
 
 typedef struct

@@ -469,16 +469,15 @@ void drawGamefield(uint8_t quadrant, uint8_t *field)
   }
 }
 
-void drawGamefieldUpdate(uint8_t quadrant, uint8_t *gamefield, uint8_t attackPos, uint8_t blink)
+void drawGamefieldUpdate(uint8_t quadrant, uint8_t *gamefield, uint8_t attackPos, uint8_t anim)
 {
-  uint16_t pos;
-  uint8_t baseX;
-  uint8_t baseY;
-  uint8_t x;
-  uint8_t y;
-  uint8_t c;
-  uint8_t charCode;
-
+    uint16_t pos;
+    uint8_t baseX;
+    uint8_t baseY;
+    uint8_t x;
+    uint8_t y;
+    uint8_t c;
+    uint8_t charCode;
 
     pos = fieldX + quadrant_offset[quadrant];
     baseX = (uint8_t)(pos % 40);  // WIDTH = 40
@@ -487,35 +486,41 @@ void drawGamefieldUpdate(uint8_t quadrant, uint8_t *gamefield, uint8_t attackPos
     y = attackPos / 10;
     c = gamefield[attackPos];
 
-  if (c == FIELD_ATTACK)
-  {
-    // Determine if actual x coordinate is even or odd
-    if (blink)
+    // Animate attack
+    if (anim > 9)
     {
-        // Blink animation
-        charCode = ((baseX + x) % 2) ? HIT2_ODD : HIT2_EVEN;
+        // Draw attack frame
+        charCode = anim + ((baseX + x) % 2 ? (ATTACK_ANIM_START_ODD-10) : (ATTACK_ANIM_START_EVEN-10));
     }
-    else
+    else if (c == FIELD_ATTACK)
     {
-        // Normal display
-        charCode = ((baseX + x) % 2) ? HIT_NORMAL_ODD : HIT_NORMAL_EVEN;
+        // Determine if actual x coordinate is even or odd
+        if (anim)
+        {
+            // Blink animation
+            charCode = ((baseX + x) % 2) ? HIT2_ODD : HIT2_EVEN;
+        }
+        else
+        {
+            // Normal display
+            charCode = ((baseX + x) % 2) ? HIT_NORMAL_ODD : HIT_NORMAL_EVEN;
+        }
     }
-  }
-  else if (c == FIELD_MISS)
-  {
-      //charCode = 0x1A;  // srcMiss
-    charCode = ((baseX + x) % 2) ? MISS_NORMAL_ODD : MISS_NORMAL_EVEN;
-  }
-  else if (c == 0)
-  {
-    charCode = ((baseX + x) % 2) ? EMPTY_NORMAL_ODD : EMPTY_NORMAL_EVEN;
-      //return;  debug: need to write back even for empty cells
-  }
-  else {
-    return;
-  }
+    else if (c == FIELD_MISS)
+    {
+        //charCode = 0x1A;  // srcMiss
+        charCode = ((baseX + x) % 2) ? MISS_NORMAL_ODD : MISS_NORMAL_EVEN;
+    }
+    //   else if (c == 0)
+    //   {
+    //     charCode = ((baseX + x) % 2) ? EMPTY_NORMAL_ODD : EMPTY_NORMAL_EVEN;
+    //       //return;  debug: need to write back even for empty cells
+    //   }
+    else {
+        return;
+    }
 
-  hires_putc(baseX + x, baseY + y * 8, ROP_CPY, charCode);
+    hires_putc(baseX + x, baseY + y * 8, ROP_CPY, charCode);
 }
 
 void drawGamefieldCursor(uint8_t quadrant, uint8_t x, uint8_t y, uint8_t *gamefield, uint8_t blink)

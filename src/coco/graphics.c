@@ -213,6 +213,8 @@ uint8_t legendShipOffset[5][2] =
      . . . . .
 */
 
+
+#ifdef COCO3
 void updateColors()
 {
     memcpy((void *)0xFFB0, &palette + 16 * (prefs.colorMode - 1), 16);
@@ -251,7 +253,15 @@ void rgbOrComposite()
 
     updateColors();
 }
+
 uint16_t oldGime;
+#else
+uint8_t cycleNextColor() {
+    // Not implemented on CoCo 2
+    return 0;
+}
+#endif
+
 void initGraphics()
 {
     uint16_t i;
@@ -645,23 +655,23 @@ uint8_t *srcHit2 = &charset[(uint16_t)0x1B CHAR_SHIFT];
 uint8_t *srcHitLegend = &charset[(uint16_t)0x1C CHAR_SHIFT];
 uint8_t *srcAttackAnimStart = &charset[(uint16_t)0x63 CHAR_SHIFT];
 
-// Updates the gamefield display at attackPos
-void drawGamefieldUpdate(uint8_t quadrant, uint8_t *gamefield, uint8_t attackPos, uint8_t blink)
+
+void drawGamefieldUpdate(uint8_t quadrant, uint8_t *gamefield, uint8_t attackPos, uint8_t anim)
 {
     uint8_t j, c = gamefield[attackPos];
     uint8_t *src;
 
-    // Animate attack (checking for empty sea cells if animating attack for active player)
-    if (blink > 9 && (state.prevActivePlayer > 0 || c == 0))
+    // Animate attack
+    if (anim > 9)
     {
-        src = srcAttackAnimStart + (blink - 10) * CHAR_SIZE;
+        src = srcAttackAnimStart + (anim - 10) * CHAR_SIZE;
     }
     else
     {
 
         if (c == FIELD_ATTACK)
         {
-            src = blink ? srcHit2 : srcHit;
+            src = anim ? srcHit2 : srcHit;
         }
         else if (c == FIELD_MISS)
         {

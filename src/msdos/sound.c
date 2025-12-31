@@ -31,6 +31,9 @@ void beep(unsigned int frequency, unsigned int frames, unsigned int wait) {
     unsigned int divisor;
     unsigned char tmp;
 
+    if (prefs.disableSound)
+        return;
+
     // Calculate the divisor for the given frequency
     divisor = PIT_FREQUENCY / frequency;
 
@@ -64,7 +67,7 @@ void beep(unsigned int frequency, unsigned int frames, unsigned int wait) {
         // Wait until vblank starts
         while(!(inp(0x3DA) & 0x08));
         // Wait until vblank stops
-	while(inp(0x3DA) & 0x08);
+	    while(inp(0x3DA) & 0x08);
     }
 }
 
@@ -96,7 +99,11 @@ void soundGameDone()
 
 void soundCursor()
 {
-    beep(50,2,0);
+    // Wait until vblank starts
+    while(!(inp(0x3DA) & 0x08));
+    // Wait until vblank stops
+    while(inp(0x3DA) & 0x08);
+    beep(300,1,0);
 }
 
 void soundPlaceShip()
@@ -107,12 +114,14 @@ void soundPlaceShip()
 
 void soundTick()
 {
-    beep(300,2,0);
+    beep(100,1,0);
 }
 
 void soundSelect()
 {
-
+    beep(350,2,1);
+    beep(250,2,0);
+    beep(150,2,0);
 }
 
 void soundMiss()
@@ -129,19 +138,36 @@ void soundInvalid()
 
 void soundAttack()
 {
+    
     uint8_t i;
-    for (i = 80; i >= 50; i -= 10)
-        beep(i, 2, 0);
+    for (i = 0; i <3; i++) {
+        beep(rand() % 2+90, 2, 0);
+    }
+    for (i = 0; i <2; i++) {
+        beep(rand() % 2+70, 2, 0);
+    }
+    //for (i = 0; i <1; i++) {
+        beep(rand() % 2+60, 2, 0);
+    //}
 }
 
 void soundHit()
 {
     uint8_t i;
-    for (i = 50; i <= 80; i += 10)
-        beep(i, 2, 1);
+    for (i = 70; i >= 30; i -= 10) {
+        beep(i, 2, 0);
+    }
 }
 
-// Not applicable to CoCo
+void soundSink()
+{
+    uint8_t i;
+    for (i = 120; i >= 60; i -= 10) {
+        beep(i, 2, 0);
+    }
+}
+
+// Not applicable to msdos
 void soundStop() {}
 void disableKeySounds() {}
 void enableKeySounds() {}

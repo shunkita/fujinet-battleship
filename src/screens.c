@@ -394,6 +394,9 @@ void showTableSelectionScreen()
     clearRenderState();
     state.waitingOnEndGameContinue = false;
 
+    // Clear gamefield
+    memset(state.gamefield, 0, sizeof(state.gamefield));
+
     // Join table
     apiCall("state");
 

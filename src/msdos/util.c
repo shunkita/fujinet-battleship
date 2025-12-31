@@ -47,5 +47,5 @@ uint8_t getJiffiesPerSecond()
 
 uint8_t getRandomNumber(uint8_t maxExclusive)
 {
-    return rand() % 255;
+    return (uint8_t)rand()&0xff;
 }

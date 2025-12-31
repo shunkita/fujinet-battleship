@@ -46,6 +46,7 @@ uint8_t shipSize[5] = {5, 4, 3, 3, 2}; // Standard ship sizes
 void main(void)
 {
     uint8_t failedApiCalls = 0;
+        char ch;
     // Testing
     // toneFinder();
     // printf("Press keys\n");while(1) {while (!kbhit());failedApiCalls = cgetc();printf("%d 0x%x\n", failedApiCalls, failedApiCalls);} // Read Key
@@ -53,6 +54,36 @@ void main(void)
     loadPrefs();    
     initGraphics();
     initSound();
+
+    // soundCursor();
+    // cgetc();
+
+    // soundSelect();
+    // cgetc();
+
+    // soundJoinGame();
+    // cgetc();
+
+    // soundMyTurn();
+    // cgetc();
+
+    // soundGameDone();
+    // cgetc();
+
+    // soundTick();
+    // cgetc();
+
+    // soundPlaceShip();
+    // cgetc();
+
+    // soundAttack(); // jak stuknięcie, nie wybuch, za wysoki
+    // cgetc();
+
+    // soundInvalid();
+    // cgetc();
+
+    // soundHit(); // dwa szumy, za wysokie
+    // cgetc();
 
     showWelcomeScreen();
     showTableSelectionScreen();

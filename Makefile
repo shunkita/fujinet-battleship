@@ -20,7 +20,7 @@
 
 PRODUCT = fbs
 PRODUCT_UPPER = FBS
-PLATFORMS = coco msdos atari apple2
+PLATFORMS = coco msdos atari apple2 c64
 
 
 

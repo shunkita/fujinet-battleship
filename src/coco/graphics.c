@@ -3,11 +3,8 @@
 */
 
 #include "hires.h"
-#include <peekpoke.h>
-#include <string.h>
-#include "../platform-specific/graphics.h"
-#include "../platform-specific/sound.h"
-#include <coco.h>
+#include "../misc.h"
+
 
 extern uint8_t charset[];
 uint8_t playerCount;

@@ -1,8 +1,6 @@
 #ifndef GAMELOGIC_H
 #define GAMELOGIC_H
 
-#include "platform-specific/graphics.h"
-
 void processStateChange();
 void renderLobby();
 void renderGameboard();

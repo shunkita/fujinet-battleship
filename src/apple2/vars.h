@@ -1,6 +1,8 @@
 #ifndef KEYMAP_H
 #define KEYMAP_H
 
+#include <joystick.h>
+
 // Screen dimensions for platform
 // from coco ver.
 
@@ -93,5 +95,6 @@
 #define KEY_BACKSPACE 0x7F
 
 #define CHAR_CURSOR 0x9F
+
 
 #endif /* KEYMAP_H */

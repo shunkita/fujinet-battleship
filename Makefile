@@ -20,6 +20,17 @@
 #   Combined Dist:  make coco-dist
 #   Test Dist:      make coco-dist test-coco-dist
 
+define HEADER
+  ______     _ _ _   _      _     ____        _   _   _           _     _       
+ │  ____│   (_│_) ╲ │ │    │ │   │  _ ╲      │ │ │ │ │ │         │ │   (_)      
+ │ │__ _   _ _ _│  ╲│ │ ___│ │_  │ │_) │ __ _│ │_│ │_│ │ ___  ___│ │__  _ _ __  
+ │  __│ │ │ │ │ │ . ` │╱ _ ╲ __│ │  _ < ╱ _` │ __│ __│ │╱ _ ╲╱ __│ '_ ╲│ │ '_ ╲ 
+ │ │  │ │_│ │ │ │ │╲  │  __╱ │_  │ │_) │ (_│ │ │_│ │_│ │  __╱╲__ ╲ │ │ │ │ │_) │
+ │_│   ╲__,_│ │_│_│ ╲_│╲___│╲__│ │____╱ ╲__,_│╲__│╲__│_│╲___││___╱_│ │_│_│ .__╱ 
+           _╱ │                                                          │ │    
+          │__╱                                                           │_│          
+  
+endef
 
 PRODUCT = fbs
 PRODUCT_UPPER = FBS
@@ -31,7 +42,6 @@ SRC_DIRS = src src/%PLATFORM%
 
 # FUJINET_LIB - specify version such as 4.7.6, or leave empty for latest
 FUJINET_LIB = 4.8.2
-
 
 ## Compiler / Linker flags                                     ##
 #################################################################
@@ -47,7 +57,6 @@ endif
 ## Coco specific flags (cmoc)
 CFLAGS_EXTRA_COCO = \
 	-Wno-assign-in-condition \
-	-I src/include \
 	--no-relocate \
 	--intermediate
 
@@ -90,6 +99,8 @@ LDFLAGS_EXTRA_C64 += -C support/c64/c64-custom.cfg
 
 
 $(PLATFORM)/r2r::
+	$(info $(HEADER) )	
+
 #   TEMP USE - Uncomment to clean entire obj dir
 #	rm -rf $(OBJ_DIR)
 
@@ -120,6 +131,7 @@ $(PLATFORM)/disk-post::
 	@echo ........................................................................ ;ls -l $(EXECUTABLE);echo ........................................................................
 
 coco/disk-post::
+ifneq ($(SKIP_EMU),1)
 #	Copy to fujinet-pc SD drive. On first run, mount that drive for future runs
 	cp $(DISK) ~/Documents/fujinetpc-coco/SD
 
@@ -130,7 +142,7 @@ coco/disk-post::
 # 	Fast speed: -ui_active and -nothrottle starts the emulator in fast mode to quickly load the app. I then throttle it to 100% speed with a hotkey.
 
 #	cd ~/mame_coco;mame coco3 -ui_active -nothrottle -window -nomaximize -resolution 1300x1024 -autoboot_delay 2 -nounevenstretch  -autoboot_command "runm\"$(PRODUCT)\n"
-ifneq ($(SKIP_EMU),1)
+
 ifeq ($(MAKE_COCO3),COCO3)
 	cd ~/mame_coco;mame coco3 -ui_active -nothrottle -window -nomaximize -resolution 1300x1024 -autoboot_delay 2 -nounevenstretch  -autoboot_command "runm\"$(PRODUCT)\n"
 else

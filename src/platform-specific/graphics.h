@@ -4,11 +4,7 @@
 
 #ifndef GRAPHICS_H
 #define GRAPHICS_H
-
-#include <stdint.h>
-#include <stdbool.h>
-#include "../misc.h"
-#include "vars.h"
+#include "../standard_lib.h"
 
 // Call to clear the screen, passing true to preserve borders
 void resetScreen();

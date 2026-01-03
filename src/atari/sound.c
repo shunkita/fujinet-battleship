@@ -6,7 +6,6 @@
 #include <stdlib.h>
 #include <peekpoke.h>
 #include "../misc.h"
-#include "../platform-specific/sound.h"
 
 uint16_t ii;
 

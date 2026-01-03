@@ -3,13 +3,8 @@
 */
 
 #include <peekpoke.h>
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <conio.h>
+#include "../misc.h"
 
-#include "../platform-specific/graphics.h"
-#include "vars.h"
 
 extern unsigned char charset[];
 extern void irqVsyncWait(void);

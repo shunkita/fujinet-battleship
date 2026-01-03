@@ -5,9 +5,8 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <apple2.h>
-#include <string.h>
+
 #include "../misc.h"
-#include "../platform-specific/sound.h"
 #define CLICK  __asm__ ("sta $c030")
 
 uint16_t ii;

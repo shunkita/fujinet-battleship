@@ -1,12 +1,23 @@
+/*
+ * Common include file for project.
+*/ 
+
+/*******************************************************************
+ * 
+ * Do NOT include standard library headers (e.g. conio, std*). 
+ * Instead, add to standard_lib.h, which gets included in this file
+ * 
+ ******************************************************************/
+
 #ifndef MISC_H
 #define MISC_H
 
-//#include <joystick.h>
-#include <conio.h>
+#include "standard_lib.h"
 #include "platform-specific/graphics.h"
+#include "platform-specific/util.h"
 #include "platform-specific/input.h"
-#include <stdbool.h>
-#include <stdint.h>
+#include "platform-specific/sound.h"
+#include "platform-specific/vars.h"
 
 // Client version string to send to server
 #define API_CLIENT_VERSION "2"

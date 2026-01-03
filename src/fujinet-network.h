@@ -7,8 +7,6 @@
 #ifndef FUJINET_NETWORK_H
 #define FUJINET_NETWORK_H
 
-#include <stdint.h>
-#include <stdbool.h>
 
 #ifdef __CBM__
 

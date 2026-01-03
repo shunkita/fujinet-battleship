@@ -2,11 +2,7 @@
   Platform specific sound functions
 */
 
-#include <stdint.h>
-#include <stdlib.h>
-#include <coco.h>
 #include "../misc.h"
-#include "../platform-specific/sound.h"
 
 uint16_t ii;
 

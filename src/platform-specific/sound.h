@@ -4,9 +4,6 @@
 #ifndef SOUND_H
 #define SOUND_H
 
-#include <stdbool.h>
-#include <stdint.h>
-
 void initSound();
 
 void disableKeySounds();

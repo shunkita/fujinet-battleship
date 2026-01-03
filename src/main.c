@@ -5,22 +5,18 @@
  * @verbose main
  */
 
-#include <stdlib.h>
-#include <stdint.h>
-#include <stdbool.h>
-#include <string.h>
+/*******************************************************************
+ * 
+ * Do NOT include standard library headers (e.g. conio, std*). 
+ * Instead, add to standard_lib.h, which gets included in misc.h
+ * 
+ ******************************************************************/
 
-#include "platform-specific/graphics.h"
-#include "platform-specific/util.h"
-#include "platform-specific/input.h"
 #include "misc.h"
-#include "platform-specific/sound.h"
-
 #include "stateclient.h"
 #include "gamelogic.h"
 #include "screens.h"
 
-#include "fujinet-fuji.h"
 
 // Store default public server endpoint in case lobby did not set app key
 char serverEndpoint[50] = "https://battleship.carr-designs.com/";

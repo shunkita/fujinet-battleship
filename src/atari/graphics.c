@@ -2,14 +2,9 @@
   Graphics functionality
 */
 
+#include "../misc.h"
 #include <peekpoke.h>
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
-
 #include <atari.h>
-#include "../platform-specific/graphics.h"
-#include "vars.h"
 
 extern unsigned char charset[];
 // I'm using the space XL/XE allocates to BASIC for player/missles, charset, and screen buffer/backup

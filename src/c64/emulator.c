@@ -4,7 +4,7 @@
 #include <c64.h>
 #include <cbm.h>
 #include <stdlib.h>
-#include <string.h>
+
 #include <conio.h>
 #include <stdbool.h>
 #include <stdint.h>

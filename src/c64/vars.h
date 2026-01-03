@@ -1,6 +1,6 @@
 #ifndef KEYMAP_H
 #define KEYMAP_H
-
+#include <joystick.h>
 // Screen dimensions for platform
 
 #define WIDTH 40

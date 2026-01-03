@@ -1,7 +1,12 @@
-#include <stdlib.h>
-#include <string.h>
-#include "stateclient.h"
+/*******************************************************************
+ * 
+ * Do NOT include standard library headers (e.g. conio, std*). 
+ * Instead, add to standard_lib.h, which gets included in misc.h
+ * 
+ ******************************************************************/
+
 #include "misc.h"
+#include "stateclient.h"
 #include "fujinet-network.h"
 
 // Internal to this file

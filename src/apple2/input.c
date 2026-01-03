@@ -1,14 +1,12 @@
-#include <stdint.h>
-#include <stdbool.h>
-#include "../platform-specific/vars.h"
-#include "../platform-specific/input.h"
-#include "../misc.h"
-#include "../include/conio.h"
-#include "vars.h"
+/*
+  Apple II Joystick - Prototype version
+*/
 
-void initInput()
+#include <stdint.h>
+
+uint8_t readJoystick(void)
 {
-    // Not needed for prototype
+    // Not implemented in prototype - return 0 (no input)
+    return 0;
 }
 
-// readCommonInput() is implemented in misc.c, so not needed here

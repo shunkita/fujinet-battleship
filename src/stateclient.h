@@ -1,7 +1,12 @@
-#ifndef STAECLIENT_H
-#define STAECLIENT_H
-#include <stdbool.h>
-#include <stdint.h>
+/*******************************************************************
+ * 
+ * Do NOT include standard library headers (e.g. conio, std*). 
+ * Instead, add to standard_lib.h, which gets included in misc.h
+ * 
+ ******************************************************************/
+
+#ifndef STATECLIENT_H
+#define STATECLIENT_H
 
 #define API_CALL_ERROR (0)
 #define API_CALL_SUCCESS (1)
@@ -16,4 +21,4 @@ uint8_t getStateFromServer();
 uint8_t apiCall(const char *path );
 void sendMove(char* move);
 
-#endif /* STAECLIENT_H */
+#endif /* STATECLIENT_H */

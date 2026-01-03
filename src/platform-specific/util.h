@@ -4,7 +4,7 @@
 /*
   Platform specific utilities that don't fit in any category
 */
-#include <stdint.h>
+
 
 void resetTimer();
 uint16_t getTime();

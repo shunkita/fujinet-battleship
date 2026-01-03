@@ -1,6 +1,5 @@
 #include <stdlib.h>
 #include <stdint.h>
-#include "../fujinet-fuji.h"
 #include "../platform-specific/graphics.h"
 
 #include "../fujinet-fuji.h"

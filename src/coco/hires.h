@@ -1,7 +1,7 @@
 #ifndef HIRES_H
 #define HIRES_H
+#include "../standard_lib.h"
 #include "vars.h"
-#include <stdint.h>
 
 void hires_putc(uint8_t x, uint8_t y, ROP_TYPE rop, uint8_t c);
 void hires_putcc(uint8_t x, uint8_t y, ROP_TYPE rop, unsigned cc);

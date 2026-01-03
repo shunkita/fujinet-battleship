@@ -6,8 +6,7 @@
 #include <stdlib.h>
 #include <peekpoke.h>
 #include "../misc.h"
-#include "../platform-specific/sound.h"
-#include "../platform-specific/util.h"
+
 
 // C64 SID chip registers
 #define SID_BASE 0xD400

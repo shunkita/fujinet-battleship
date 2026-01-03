@@ -66,4 +66,12 @@
 
 #define CHAR_CURSOR 0x9F
 
+/* Macros that evaluate the return code of joy_read */
+#define JOY_UP(v) ((v) & 1)
+#define JOY_DOWN(v) ((v) & 2)
+#define JOY_LEFT(v) ((v) & 4)
+#define JOY_RIGHT(v) ((v) & 8)
+#define JOY_BTN_1(v) ((v) & 0) /* Universally available */
+#define JOY_BTN_2(v) ((v) & 0) /* Second button if available */
+
 #endif /* KEYMAP_H */

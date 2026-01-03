@@ -7,7 +7,7 @@
 
 #ifdef _CMOC_VERSION_
 #include <cmoc.h>
-
+#include <coco.h>
 // Handle <stdbool.h> for CMOC builds, which does not define bool.
 // Follow the standard "ifndef _STDBOOL_H" check in case the project already does this.
 #ifndef _STDBOOL_H

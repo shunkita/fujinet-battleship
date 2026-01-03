@@ -1,14 +1,9 @@
 
-
-#include <peekpoke.h>
-#include <stdlib.h>
-#include <stdint.h>
-#include "../fujinet-fuji.h"
-#include "../platform-specific/graphics.h"
 #include <coco.h>
-
 #include "../fujinet-fuji.h"
 #include "../fujinet-network.h"
+#include "../platform-specific/graphics.h"
+
 
 #define FUJI_HOST_SLOT_COUNT 8
 #define FUJI_DEVICE_SLOT_COUNT 8

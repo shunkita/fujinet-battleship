@@ -1,3 +1,10 @@
+/*******************************************************************
+ * 
+ * Do NOT include standard library headers (e.g. conio, std*). 
+ * Instead, add to standard_lib.h, which gets included in misc.h
+ * 
+ ******************************************************************/
+
 #ifndef SCREENS_H
 #define SCREENS_H
 

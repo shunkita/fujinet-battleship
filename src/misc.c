@@ -1,15 +1,12 @@
-#include "include/joystick.h"
-#include <string.h>
-#include "platform-specific/graphics.h"
-#include "platform-specific/input.h"
-#include "platform-specific/sound.h"
+/*******************************************************************
+ * 
+ * Do NOT include standard library headers (e.g. conio, std*). 
+ * Instead, add to standard_lib.h, which gets included in misc.h
+ * 
+ ******************************************************************/
+
 #include "misc.h"
-#include "fujinet-fuji.h"
 
-#include <stdbool.h>
-#include <stdint.h>
-
-#include <stdio.h>
 #ifdef __APPLE2__
 #include <peekpoke.h>
 #endif

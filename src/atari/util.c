@@ -1,7 +1,7 @@
 #include <peekpoke.h>
 #include <stdlib.h>
 #include <atari.h>
-#include <string.h>
+
 #include "../misc.h"
 #include "../fujinet-fuji.h"
 #include "../platform-specific/graphics.h"

@@ -4,12 +4,10 @@
 #include <i86.h>
 #include <dos.h>
 #include <stdint.h>
-#include <string.h>
+
 #include <stdbool.h>
 #include <conio.h>
 #include "vars.h"
-#include "../platform-specific/graphics.h"
-#include "../platform-specific/sound.h"
 #include "../misc.h"
 #include <stdio.h>
 

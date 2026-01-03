@@ -1,17 +1,14 @@
-#include <stdlib.h>
-#include <string.h>
-#include "platform-specific/graphics.h"
-#include "platform-specific/sound.h"
-#include "platform-specific/util.h"
-#include "gamelogic.h"
+/*******************************************************************
+ * 
+ * Do NOT include standard library headers (e.g. conio, std*). 
+ * Instead, add to standard_lib.h, which gets included in misc.h
+ * 
+ ******************************************************************/
+
 #include "misc.h"
+#include "gamelogic.h"
 #include "stateclient.h"
 #include "screens.h"
-// #include <peekpoke.h>
-
-#ifdef __WATCOMC__
-#define cgetc getch
-#endif /* __WATCOMC__ */
 
 #ifndef TIMER_WIDTH
 #define TIMER_WIDTH 1

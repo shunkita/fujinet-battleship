@@ -5,7 +5,7 @@
 #define INPUT_H
 
 // Include platform specific vars
-#include "vars.h"
+#include "../standard_lib.h"
 
 // Platform specific implementations
 uint8_t readJoystick();

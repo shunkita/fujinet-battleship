@@ -1,9 +1,3 @@
-
-
-#include <string.h>
-#include <stdint.h>
-#include <conio.h>
-#include "../platform-specific/sound.h"
 #include "hires.h"
 #include "vars.h"
 

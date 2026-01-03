@@ -1,0 +1,37 @@
+#ifndef STANDARD_LIB_H
+#define STANDARD_LIB_H
+
+/*
+ * All standard library includes should be added here for use by
+ * platform agnostic code in the "src" directory.
+ * 
+ * This creates one place to manage platform/compiler specific standard headers.
+ * 
+ * This ONLY applies to code in the immediate "src" directory.
+ * Files in "/src/[platform]" may reference misc.h, this file, or headers directly as needed.
+ */
+
+// Include FujiNet Fuji header, which sets std int and bool types (uint8_t, bool, etc)
+#include "fujinet-fuji.h"
+
+#ifdef _CMOC_VERSION_
+#include <coco.h>
+
+/* (Non blocking) Return a character if there's a key waiting, otherwise 0.
+ */
+unsigned char kbhit (void);
+
+/* (Blocking) Return a character from the keyboard. If there is no key waiting,
+ * the function waits until the user does press a key.
+ */
+char cgetc (void);
+
+#else
+// Standard libraries
+#include <conio.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#endif
+
+#endif /* STANDARD_LIB_H */
